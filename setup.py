@@ -26,7 +26,7 @@ setup(
     name="enumchoice",
     description="Enum Choice for Click",
     packages=find_packages(include=["enumchoice", "enumchoice.*"]),
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     version="0.0.1",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
@@ -34,8 +34,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
