@@ -1,4 +1,4 @@
-# Enum Choice for Click
+# Enum Choice for Click (WIP)
 
 [![](https://img.shields.io/pypi/v/enumchoice.svg)](https://pypi.python.org/pypi/enumchoice)
 [![CI](https://github.com/maximz/enumchoice/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/maximz/enumchoice/actions/workflows/ci.yaml)
