@@ -1,19 +1,20 @@
-# Enum Choice for Click (WIP)
+# enumchoice
 
 [![](https://img.shields.io/pypi/v/enumchoice.svg)](https://pypi.python.org/pypi/enumchoice)
 [![CI](https://github.com/maximz/enumchoice/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/maximz/enumchoice/actions/workflows/ci.yaml)
 [![](https://img.shields.io/badge/docs-here-blue.svg)](https://enumchoice.maximz.com)
 [![](https://img.shields.io/github/stars/maximz/enumchoice?style=social)](https://github.com/maximz/enumchoice)
 
-## TODOs: Configuring this template
+`enumchoice` is a small helper for Click CLIs that lets a Python `Enum` be used
+directly as an option type. It exposes enum member names as the accepted
+command-line choices and returns the matching enum member to the Click command.
 
-Create a Netlify site for your repository, then turn off automatic builds in Netlify settings.
+## Why it exists
 
-Add these CI secrets: `PYPI_API_TOKEN`, `NETLIFY_AUTH_TOKEN` (Netlify user settings - personal access tokens), `DEV_NETLIFY_SITE_ID`, `PROD_NETLIFY_SITE_ID` (API ID from Netlify site settings)
-
-Set up Codecov at TODO
-
-## Overview
+Click's built-in `click.Choice` validates strings. If an option represents an
+`Enum`, a command normally has to build a list of enum names for Click and then
+convert the selected strings back to enum members. `EnumChoice` keeps those two
+steps in one Click parameter type.
 
 ## Installation
 
@@ -21,31 +22,76 @@ Set up Codecov at TODO
 pip install enumchoice
 ```
 
+The package requires Python 3.8 or newer and Click 7.0 or newer.
+
 ## Usage
+
+```python
+from enum import Enum
+
+import click
+from enumchoice import EnumChoice
+
+
+class Color(Enum):
+    red = "r"
+    blue = "b"
+    green = "g"
+
+
+@click.command()
+@click.option("--color", type=EnumChoice(Color), default=Color.red, show_default=True)
+def cli(color):
+    assert isinstance(color, Color)
+    click.echo(color.name)
+```
+
+Matching is case-insensitive by default, so `--color RED`, `--color red`, and
+`--color ReD` all resolve to `Color.red`. Pass `case_sensitive=True` to require
+exact enum member names.
+
+`EnumChoice` also works with Click's `multiple=True` options:
+
+```python
+@click.option(
+    "--color",
+    multiple=True,
+    default=list(Color),
+    type=EnumChoice(Color),
+)
+def cli(color):
+    # color is a tuple of Color members.
+    ...
+```
+
+## How it works
+
+`EnumChoice` subclasses `click.Choice`. Its constructor builds the choice list
+from each enum member's `name`. During conversion it lets Click perform normal
+choice validation and case normalization, then looks up the normalized name in
+the enum class and returns that member.
+
+`None` and already-converted `Enum` instances pass through unchanged, which
+allows enum-valued defaults such as `default=Color.red` or `default=list(Color)`.
+
+## Behavior and limitations
+
+- Choices are enum member names, not enum values.
+- Click callbacks receive enum members, not strings.
+- No aliases are added beyond the enum's declared member names.
+- The package metadata currently marks the project as pre-alpha, version
+  `0.0.1`.
 
 ## Development
 
-Submit PRs against `develop` branch, then make a release pull request to `master`.
-
 ```bash
-# Install requirements
-pip install --upgrade pip wheel
 pip install -r requirements_dev.txt
-
-# Install local package
 pip install -e .
-
-# Install pre-commit
-pre-commit install
-
-# Run tests
 make test
-
-# Run lint
 make lint
-
-# bump version before submitting a PR against master (all master commits are deployed)
-bump2version patch # possible: major / minor / patch
-
-# also ensure CHANGELOG.md updated
+make docs
 ```
+
+The repository includes pytest, pre-commit, coverage, Sphinx documentation, and
+release packaging configuration. The project is distributed under the MIT
+license.
