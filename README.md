@@ -1,5 +1,10 @@
 # enumchoice
 
+[![](https://img.shields.io/pypi/v/enumchoice.svg)](https://pypi.python.org/pypi/enumchoice)
+[![CI](https://github.com/maximz/enumchoice/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/maximz/enumchoice/actions/workflows/ci.yaml)
+[![](https://img.shields.io/badge/docs-here-blue.svg)](https://enumchoice.maximz.com)
+[![](https://img.shields.io/github/stars/maximz/enumchoice?style=social)](https://github.com/maximz/enumchoice)
+
 `enumchoice` is a small helper for Click CLIs that lets a Python `Enum` be used
 directly as an option type. It exposes enum member names as the accepted
 command-line choices and returns the matching enum member to the Click command.
